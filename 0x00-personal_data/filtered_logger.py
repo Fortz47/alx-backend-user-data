@@ -48,7 +48,7 @@ class RedactingFormatter(logging.Formatter):
             message,
             self.SEPARATOR
                               )
-        return message.strip()
+        return message
 
 
 def get_logger() -> logging.Logger:
@@ -73,3 +73,20 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return mysql.connector.connection.MySQLConnection(
         user=user, password=pwd, host=host, database=db_name
     )
+
+
+def main() -> None:
+    """returns all row from db"""
+    db = get_db()
+    cursor = db.cursor()
+    logger = get_logger()
+    cursor.execute("SELECT * FROM users;")
+    for row in cursor:
+        record = logging.LogRecord(None, None, None, None, row, None, None)
+        print(logger.format(record))
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
