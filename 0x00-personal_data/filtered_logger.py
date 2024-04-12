@@ -5,7 +5,6 @@ from typing import List
 import logging
 import mysql.connector
 import os
-# from mysql.connector import connection
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -76,5 +75,5 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         password=pwd,
         host=host,
         database=db_name
-                                    )
+                                                    )
     return cnx
