@@ -4,6 +4,7 @@ from api.v1.auth.auth import Auth
 import base64
 from models.user import User
 from typing import TypeVar
+from flask import request
 
 
 class BasicAuth(Auth):
@@ -49,7 +50,7 @@ class BasicAuth(Auth):
             user_email: str,
             user_pwd: str
                                     ) -> TypeVar('User'):
-        """eturns the User instance based on his email and password"""
+        """returns the User instance based on his email and password"""
         try:
             assert not (user_email is None or user_pwd is None)
             assert isinstance(user_email, str) and isinstance(user_pwd, str)
@@ -60,5 +61,24 @@ class BasicAuth(Auth):
             assert user.is_valid_password(user_pwd)
             return user
         except Exception as e:
+            pass
+        return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """overloads Auth and retrieves the User instance for a request"""
+        try:
+            auth_header = self.authorization_header(request=request)
+            encoded_credentials = self.extract_base64_authorization_header(
+                    auth_header
+                )
+            decoded_credentials = self.decode_base64_authorization_header(
+                    encoded_credentials
+                )
+            user_email, user_pwd = self.extract_user_credentials(
+                    decoded_credentials
+                )
+            user = self.user_object_from_credentials(user_email, user_pwd)
+            return [user.to_json(True)]
+        except Exception:
             pass
         return None
