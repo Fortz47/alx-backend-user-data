@@ -2,6 +2,7 @@
 """Authentication Module"""
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -12,7 +13,19 @@ class Auth:
             path = path if path[-1] == '/' else path + '/'
             if path in excluded_paths:
                 return False
-        except Exception:
+            path = list(path)
+            path.pop()
+            if path[-1] == '*':
+                path.pop()
+                pattern = ''.join(path) + '.*?'
+                if any(re.search(pattern, _path) for _path in excluded_paths):
+                    return False
+                # for _path in excluded_paths:
+                #    if re.search(pattern, _path):
+                #        setattr(request, 'path', _path)
+                #        return False
+        except Exception as e:
+            print(e)
             pass
         return True
 
