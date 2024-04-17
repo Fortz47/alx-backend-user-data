@@ -13,17 +13,13 @@ class Auth:
             path = path if path[-1] == '/' else path + '/'
             if path in excluded_paths:
                 return False
-            path = list(path)
-            path.pop()
-            if path[-1] == '*':
-                path.pop()
-                pattern = ''.join(path) + '.*?'
-                if any(re.search(pattern, _path) for _path in excluded_paths):
-                    return False
-                # for _path in excluded_paths:
-                #    if re.search(pattern, _path):
-                #        setattr(request, 'path', _path)
-                #        return False
+            for _path in excluded_paths:
+                if _path[-1] == '*':
+                    _path = list(_path)
+                    _path.pop()
+                    pattern = ''.join(_path) + '.*?'
+                    if re.search(pattern, path):
+                        return False
         except Exception as e:
             print(e)
             pass
