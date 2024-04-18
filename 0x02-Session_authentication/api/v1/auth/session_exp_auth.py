@@ -33,14 +33,12 @@ class SessionExpAuth(SessionAuth):
             assert self.user_id_by_session_id.get(session_id) is not None
             user_id = self.user_id_by_session_id.get(session_id)\
                 .get('user_id')
-            if self.session_duration == 0:
-                return user_id
             created_at = self.user_id_by_session_id.get(session_id)\
                 .get('created_at')
             assert created_at is not None
             seconds_in_timedelta = timedelta(seconds=self.session_duration)
             assert created_at + seconds_in_timedelta > datetime.now()
             return user_id
-        except Exception as e:
+        except Exception:
             pass
         return None
