@@ -15,12 +15,21 @@ from flask_cors import (CORS, cross_origin)
 import os
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
 
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
+
+
+if os.getenv('AUTH_TYPE') == 'session_auth':
+    auth = SessionAuth()
+elif os.getenv('AUTH_TYPE') == 'basic_auth':
+    auth = BasicAuth()
+elif os.getenv('AUTH_TYPE'):
+    auth = Auth()
 
 
 @app.errorhandler(404)
@@ -50,29 +59,24 @@ def forbidden(error) -> str:
     )
 
 
-if os.getenv('AUTH_TYPE') == 'basic_auth':
-    auth = BasicAuth()
-elif os.getenv('AUTH_TYPE'):
-    auth = Auth()
-
-
 @app.before_request
 def check_auth():
     """check if authorization is needed before any request is fuffiled"""
-    if auth:
-        excluded_paths = [
-                '/api/v1/status/',
-                '/api/v1/unauthorized/',
-                '/api/v1/forbidden/',
-                '/api/v1/stats'
-            ]
-        if not auth.require_auth(request.path, excluded_paths):
-            return
-        if auth.authorization_header(request) is None:
-            abort(401)
-        request.current_user = auth.current_user(request)
-        if auth.current_user(request) is None:
-            abort(403)
+    if not auth:
+        return
+    excluded_paths = [
+            '/api/v1/status/',
+            '/api/v1/unauthorized/',
+            '/api/v1/forbidden/',
+            '/api/v1/stats'
+        ]
+    if not auth.require_auth(request.path, excluded_paths):
+        return
+    if auth.authorization_header(request) is None:
+        abort(401)
+    request.current_user = auth.current_user(request)
+    if auth.current_user(request) is None:
+        abort(403)
 
 
 if __name__ == "__main__":
