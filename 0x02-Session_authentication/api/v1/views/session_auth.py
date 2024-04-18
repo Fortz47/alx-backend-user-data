@@ -16,9 +16,9 @@ def login() -> str:
     login_email = login_email.strip() if login_email else login_email
     login_pwd = login_pwd.strip() if login_pwd else login_pwd
     if not login_email or len(login_email) == 0:
-        return { "error": "email missing" }, 400
+        return {"error": "email missing"}, 400
     if not login_pwd or len(login_pwd) == 0:
-        return { "error": "password missing" }, 400
+        return {"error": "password missing"}, 400
     user = None
     try:
         assert User.count()
@@ -26,9 +26,9 @@ def login() -> str:
         assert len(userList)
         user = userList[0]
         if not user.is_valid_password(login_pwd):
-            return { "error": "wrong password" }, 401
+            return {"error": "wrong password"}, 401
     except Exception as e:
-        return { "error": "no user found for this email" }, 404
+        return {"error": "no user found for this email"}, 404
 
     from api.v1.app import auth
 
