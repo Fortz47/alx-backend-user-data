@@ -2,6 +2,8 @@
 """A module for managing session based authentication"""
 from api.v1.auth.auth import Auth
 import uuid
+from models.user import User
+from typing import TypeVar
 
 
 class SessionAuth(Auth):
@@ -27,3 +29,10 @@ class SessionAuth(Auth):
         except Exception:
             return None
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """returns a User instance based on a cookie value"""
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_by_session_id.get(session_id)
+        user = User.get(user_id)
+        return user
