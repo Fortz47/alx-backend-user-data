@@ -3,6 +3,7 @@
 from flask import request
 from typing import List, TypeVar
 import re
+import os
 
 
 class Auth:
@@ -37,3 +38,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """returns current user"""
         return None
+
+    def session_cookie(self, request=None):
+        """returns a cookie value"""
+        if request is None:
+            return None
+        session_id = request.cookies.get(os.getenv('SESSION_NAME'))
+        return session_id
