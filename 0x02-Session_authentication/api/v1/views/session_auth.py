@@ -27,7 +27,7 @@ def login() -> str:
         user = userList[0]
         if not user.is_valid_password(login_pwd):
             return {"error": "wrong password"}, 401
-    except Exception as e:
+    except Exception:
         return {"error": "no user found for this email"}, 404
 
     from api.v1.app import auth

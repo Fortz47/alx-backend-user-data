@@ -23,7 +23,6 @@ class SessionExpAuth(SessionAuth):
                 'user_id': user_id,
                 'created_at': datetime.now()
             }
-        print(self.user_id_by_session_id)
         return session_id
 
     def user_id_for_session_id(self, session_id=None):
