@@ -53,13 +53,11 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs: Dict) -> None:
         """updates a user based on a id in db"""
-        try:
-            user = self.find_user_by(id=user_id)
-            user_columns = [column.name for column in User.__table__.columns]
-            for k, v in kwargs.items():
-                if k not in user_columns:
-                    raise ValueError
-                setattr(user, k, v)
-        except (Exception, InvalidRequestError, NoResultFound):
-            return
+        user = self.find_user_by(id=user_id)
+        user_columns = [column.name for column in User.__table__.columns]
+        for k, v in kwargs.items():
+            if k not in user_columns:
+            # if not hasattr(user, k):
+                raise ValueError
+            setattr(user, k, v)
         self.__session.commit()
