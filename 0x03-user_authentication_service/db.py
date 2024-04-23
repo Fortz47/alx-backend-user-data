@@ -4,7 +4,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import Optional, Dict, List
 from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
@@ -39,7 +38,7 @@ class DB:
         self.__session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: Dict) -> User:
+    def find_user_by(self, **kwargs: dict) -> User:
         """finds a user based on passed attributes as arguments"""
         user_columns = [column.name for column in User.__table__.columns]
         if any(k not in user_columns for k in kwargs):
@@ -51,7 +50,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: Dict) -> None:
+    def update_user(self, user_id: int, **kwargs: dict) -> None:
         """updates a user based on a id in db"""
         user = self.find_user_by(id=user_id)
         user_columns = [column.name for column in User.__table__.columns]
