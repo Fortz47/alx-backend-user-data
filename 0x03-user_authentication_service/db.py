@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import Optional
+from typing import Optional, Dict
 from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
@@ -41,7 +41,7 @@ class DB:
         self.__session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs: Dict) -> User:
         """finds a user based on passed attributes as arguments"""
         user_columns = [column.name for column in User.__table__.columns]
         if any(k not in user_columns for k in kwargs):
