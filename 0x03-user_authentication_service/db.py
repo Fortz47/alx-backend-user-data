@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
@@ -50,3 +50,16 @@ class DB:
         if not user:
             raise NoResultFound
         return user
+
+    def update_user(self, user_id: int, **kwargs: Dict) -> None:
+        """updates a user based on a id in db"""
+        try:
+            user = self.find_user_by(id=user_id)
+            user_columns = [column.name for column in User.__table__.columns]
+            for k, v in kwargs.items():
+                if k not in user_columns:
+                    raise ValueError
+                setattr(user, k, v)
+        except (Exception, InvalidRequestError, NoResultFound):
+            return
+        self.__session.commit()
