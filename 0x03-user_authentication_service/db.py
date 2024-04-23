@@ -33,9 +33,8 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """adds user to db"""
         new_user = User(email=email, hashed_password=hashed_password)
-        self._session
-        self.__session.add(new_user)
-        self.__session.commit()
+        self._session.add(new_user)
+        self._session.commit()
         return new_user
 
     def find_user_by(self, **kwargs: dict) -> User:
@@ -43,9 +42,7 @@ class DB:
         user_columns = [column.name for column in User.__table__.columns]
         if any(k not in user_columns for k in kwargs):
             raise InvalidRequestError
-        if self.__session is None:
-            self._session
-        user = self.__session.query(User).filter_by(**kwargs).first()
+        user = self._session.query(User).filter_by(**kwargs).first()
         if not user:
             raise NoResultFound
         return user
@@ -57,4 +54,4 @@ class DB:
             if not hasattr(user, k):
                 raise ValueError
             setattr(user, k, v)
-        self.__session.commit()
+        self._session.commit()
