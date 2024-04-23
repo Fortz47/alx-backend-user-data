@@ -38,10 +38,11 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs) -> User:
-        """Find a user by the given arbitrary keyword arguments"""
+        """finds a user based on passed attributes as arguments"""
+        user_columns = [column.name for column in User.__table__.columns]
+        if any(k not in user_columns for k in kwargs):
+            raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).first()
-        # InvalidRequestError would be raised implicitly when
-        # wrong query arguments are passed
         if not user:
             raise NoResultFound
         return user
