@@ -43,9 +43,9 @@ class DB:
 
     def find_user_by(self, **kwargs: Dict) -> User:
         """finds a user based on passed attributes as arguments"""
-        user_columns = [column.name for column in User.__table__.columns]
-        if any(k not in user_columns for k in kwargs):
-            raise InvalidRequestError
+        # user_columns = [column.name for column in User.__table__.columns]
+        # if any(k not in user_columns for k in kwargs):
+        #    raise InvalidRequestError
         if self.__session is None:
             self._session
         user = self.__session.query(User).filter_by(**kwargs).first()
