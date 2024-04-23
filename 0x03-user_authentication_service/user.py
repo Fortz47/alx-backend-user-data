@@ -3,7 +3,7 @@
 from sqlalchemy import (
         Column,
         Integer,
-        String,
+        String
     )
 from sqlalchemy.ext.declarative import declarative_base
 
