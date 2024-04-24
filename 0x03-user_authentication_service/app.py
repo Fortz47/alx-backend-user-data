@@ -60,8 +60,6 @@ def login():
 def logout():
     """delete session based on session id passed in cookie"""
     session_id = request.cookies.get('session_id')
-    if session_id is None:
-        return
     user = AUTH.get_user_from_session_id(session_id)
     if user:
         AUTH.destroy_session(user.id)
