@@ -73,4 +73,3 @@ class Auth:
             setattr(user, 'session_id', None)
         except NoResultFound:
             pass
-        return None
