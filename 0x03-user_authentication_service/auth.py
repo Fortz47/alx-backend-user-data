@@ -5,6 +5,7 @@ from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
 import uuid
+from typing import Optional
 
 
 def _hash_password(password: str) -> bytes:
@@ -56,7 +57,7 @@ class Auth:
         setattr(user, 'session_id', session_id)
         return session_id
 
-    def get_user_from_session_id(self, session_id: str) -> User:
+    def get_user_from_session_id(self, session_id: str) -> Optional[User]:
         """returns user based on session id or None"""
         try:
             assert session_id
