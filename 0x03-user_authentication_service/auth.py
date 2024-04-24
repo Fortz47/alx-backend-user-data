@@ -55,3 +55,12 @@ class Auth:
         session_id = _generate_uuid()
         setattr(user, 'session_id', session_id)
         return session_id
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """returns user based on session id or None"""
+        try:
+            assert session_id
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound, AssertionError:
+            return None
