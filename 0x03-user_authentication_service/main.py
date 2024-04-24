@@ -3,12 +3,13 @@
 import requests
 
 
-def register_user(email: str, password: str) -> None
+def register_user(email: str, password: str) -> None:
     """test user resgistration"""
     data = {'email': email, 'password': password}
     resp = requests.post('http://127.0.0.1:5000/users', data=data)
 
     assert resp.json() == {"email": email, "message": "user created"}
+
 
 def log_in_wrong_password(email: str, password: str) -> None:
     """Test user login with wrong password"""
