@@ -85,3 +85,16 @@ class Auth:
             pass
 
         raise ValueError
+
+    def update_password(self, reset_token: str, password: str):
+        """updates user password in db"""
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            hash_pwd = _hash_password(password)
+            kwargs = {'hashed_password': hash_pwd, 'reset_token': None}
+            self._db.update_user(user.id, **kwargs)
+            return None
+        except NoResultFound:
+            pass
+
+        raise ValueError
