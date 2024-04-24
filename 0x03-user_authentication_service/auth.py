@@ -54,7 +54,7 @@ class Auth:
         except NoResultFound:
             return None
         session_id = _generate_uuid()
-        setattr(user, 'session_id', session_id)
+        self._db.update_user(user.id, session_id=session_id)
         return session_id
 
     def get_user_from_session_id(self, session_id: str) -> Optional[User]:
@@ -70,6 +70,18 @@ class Auth:
         """sets the value of session id in db to None"""
         try:
             user = self._db.find_user_by(id=user_id)
-            setattr(user, 'session_id', None)
+            self._db.update_user(user.id, session_id=None)
         except NoResultFound:
             pass
+
+    def get_reset_password_token(self, email: str) -> str:
+        """update the user’s reset_token database field. Return the token"""
+        try:
+            user = self._db.find_user_by(email=email)
+            reset_token = _generate_uuid()
+            self._db.update_user(user.id, reset_token=reset_token)
+            return reset_token
+        except NoResultFound:
+            pass
+
+        raise ValueError
